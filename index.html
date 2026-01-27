@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>V-Suite 2026</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            /* Lighter, balanced dark theme (Twilight Blue/Slate) instead of pure black */
+            background-color: #1e293b; 
+            color: #ffffff;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Ambient Light - Brighter, more vibrant orbs for balance */
+        .ambient-light {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            /* Lighter gradient mix */
+            background: 
+                radial-gradient(at 0% 0%, hsla(237, 49%, 15%, 1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(215, 28%, 17%, 1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(250, 40%, 15%, 1) 0, transparent 50%);
+            animation: breathe 15s ease-in-out infinite alternate;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5; /* Slightly reduced opacity for balance */
+            animation: float 20s infinite ease-in-out;
+        }
+        /* Brighter colors for the orbs */
+        .orb-1 { width: 300px; height: 300px; background: #6366f1; top: 10%; left: 20%; animation-delay: 0s; } /* Indigo-500 */
+        .orb-2 { width: 400px; height: 400px; background: #2dd4bf; bottom: 10%; right: 10%; animation-delay: -5s; } /* Teal-400 */
+        .orb-3 { width: 200px; height: 200px; background: #f472b6; top: 40%; left: 60%; animation-delay: -10s; } /* Pink-400 */
+
+        @keyframes breathe {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            33% { transform: translate(30px, -50px); }
+            66% { transform: translate(-20px, 20px); }
+        }
+
+        /* Glassmorphism Utilities - More "Frosty" for visibility */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .glass-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .glass-card:active {
+            transform: scale(0.96);
+            background: rgba(255,255,255,0.12);
+        }
+
+        @media (hover: hover) {
+            .glass-card:hover {
+                transform: translateY(-4px);
+                background: rgba(255,255,255,0.12);
+                border-color: rgba(255,255,255,0.25);
+                box-shadow: 0 10px 40px -10px rgba(0,0,0,0.3);
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        /* Animation Classes */
+        .fade-in-up {
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+
+        /* Search Bar Animation */
+        .search-container {
+            width: 48px; /* Collapsed width (icon size + padding) */
+            height: 48px;
+            overflow: hidden;
+            transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .search-container:hover, 
+        .search-container:focus-within {
+            width: 100%;
+            max-width: 28rem; /* max-w-md */
+            background: rgba(255, 255, 255, 0.15); /* Slightly lighter on active */
+        }
+
+        .search-input {
+            opacity: 0;
+            width: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+        }
+
+        .search-container:hover .search-input, 
+        .search-container:focus-within .search-input {
+            opacity: 1;
+            width: 100%;
+            pointer-events: auto;
+            transition-delay: 0.1s;
+        }
+        
+        .search-icon {
+             transition: transform 0.3s ease;
+        }
+        
+        .search-container:hover .search-icon,
+        .search-container:focus-within .search-icon {
+            transform: scale(0.9);
+        }
+
+    </style>
+</head>
+<body class="min-h-screen pb-32">
+
+    <!-- Ambient Background -->
+    <div class="ambient-light">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Header / Greeting -->
+    <header class="pt-8 px-6 mb-6 fade-in-up">
+        <div class="flex justify-between items-end">
+            <div>
+                <p id="greeting" class="text-sm font-medium text-cyan-200 tracking-wider uppercase mb-1">Welcome back</p>
+                <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70">V-Suite</h1>
+            </div>
+            <div id="clock" class="text-right">
+                <div class="text-2xl font-light tabular-nums" id="timeDisplay">--:--</div>
+                <div class="text-xs text-white/50" id="dateDisplay">---</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="px-4 max-w-5xl mx-auto space-y-8" id="app-container">
+        
+        <!-- Essentials Section (Bento Grid) - Updated with Checklist -->
+        <section class="fade-in-up stagger-1">
+            <h2 class="text-sm font-medium text-white/60 mb-3 px-2 flex items-center gap-2">
+                <i data-lucide="zap" class="w-4 h-4 text-amber-300"></i> Essentials
+            </h2>
+            <!-- Changed grid to support 5 items nicely -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+                
+                <!-- WhatsApp -->
+                <a href="https://web.whatsapp.com/" target="_blank" class="glass-card rounded-2xl p-4 flex flex-col justify-between h-32 relative group">
+                    <div class="bg-green-500/20 w-10 h-10 rounded-full flex items-center justify-center text-green-400 mb-2">
+                        <i data-lucide="message-circle" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="text-lg font-semibold block leading-tight">WhatsApp</span>
+                        <span class="text-xs text-white/50">Connect</span>
+                    </div>
+                </a>
+
+                <!-- Gmail -->
+                <a href="https://mail.google.com/mail/u/0/#inbox" target="_blank" class="glass-card rounded-2xl p-4 flex flex-col justify-between h-32">
+                    <div class="bg-red-500/20 w-10 h-10 rounded-full flex items-center justify-center text-red-400 mb-2">
+                        <i data-lucide="mail" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="text-lg font-semibold block leading-tight">Gmail</span>
+                        <span class="text-xs text-white/50">Inbox</span>
+                    </div>
+                </a>
+
+                <!-- Calendar -->
+                <a href="https://calendar.google.com/calendar/u/0/r" target="_blank" class="glass-card rounded-2xl p-4 flex flex-col justify-between h-32">
+                    <div class="bg-blue-500/20 w-10 h-10 rounded-full flex items-center justify-center text-blue-400 mb-2">
+                        <i data-lucide="calendar" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="text-lg font-semibold block leading-tight">Calendar</span>
+                        <span class="text-xs text-white/50">Schedule</span>
+                    </div>
+                </a>
+
+                 <!-- Loggr -->
+                 <a href="https://darylmilanes.com/loggr" target="_blank" class="glass-card rounded-2xl p-4 flex flex-col justify-between h-32">
+                    <div class="bg-purple-500/20 w-10 h-10 rounded-full flex items-center justify-center text-purple-400 mb-2">
+                        <i data-lucide="pen-tool" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="text-lg font-semibold block leading-tight">Loggr</span>
+                        <span class="text-xs text-white/50">Track</span>
+                    </div>
+                </a>
+
+                <!-- Checklist (Moved Here) -->
+                <a href="https://darylmilanes.com/checklist" target="_blank" class="glass-card rounded-2xl p-4 flex flex-col justify-between h-32">
+                    <div class="bg-teal-500/20 w-10 h-10 rounded-full flex items-center justify-center text-teal-400 mb-2">
+                        <i data-lucide="check-square" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="text-lg font-semibold block leading-tight">Checklist</span>
+                        <span class="text-xs text-white/50">Tasks</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- 2026 Strategic Suite -->
+        <section class="fade-in-up stagger-2">
+            <h2 class="text-sm font-medium text-white/60 mb-3 px-2 flex items-center gap-2">
+                <i data-lucide="rocket" class="w-4 h-4 text-cyan-400"></i> 2026 Operations
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <!-- Sales Projection -->
+                <a href="https://docs.google.com/spreadsheets/d/1KzhPyVBmvxqOsPPeaHqeUKsbHowGfQzP/edit?gid=1170896797#gid=1170896797" target="_blank" class="glass-card rounded-xl p-4 flex items-center gap-4">
+                    <div class="bg-emerald-500/10 p-3 rounded-lg text-emerald-400">
+                        <i data-lucide="trending-up" class="w-6 h-6"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-medium">Sales Projection</h3>
+                        <p class="text-xs text-white/50">Financial Goals</p>
+                    </div>
+                    <div class="bg-emerald-500/20 text-emerald-300 text-[10px] font-bold px-2 py-1 rounded">2026</div>
+                </a>
+
+                <!-- Leads Tracker -->
+                <a href="https://docs.google.com/spreadsheets/d/1RCCa7D6-ZI6U97zrNTSQyeTBjLCKsKFaVI3Tv80wxQU/edit?gid=0#gid=0" target="_blank" class="glass-card rounded-xl p-4 flex items-center gap-4">
+                    <div class="bg-orange-500/10 p-3 rounded-lg text-orange-400">
+                        <i data-lucide="users" class="w-6 h-6"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-medium">Leads Tracker</h3>
+                        <p class="text-xs text-white/50">Pipeline Management</p>
+                    </div>
+                    <div class="bg-orange-500/20 text-orange-300 text-[10px] font-bold px-2 py-1 rounded">2026</div>
+                </a>
+
+                <!-- Zone Allocation -->
+                <a href="https://docs.google.com/spreadsheets/d/14hmQ4iy_qSaO6eN47t6Xh3d6cMXgoIXolWdgCFQAq1Q/edit?gid=0#gid=0" target="_blank" class="glass-card rounded-xl p-4 flex items-center gap-4">
+                    <div class="bg-pink-500/10 p-3 rounded-lg text-pink-400">
+                        <i data-lucide="map" class="w-6 h-6"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-medium">Zone Allocation</h3>
+                        <p class="text-xs text-white/50">Territory Planning</p>
+                    </div>
+                    <div class="bg-pink-500/20 text-pink-300 text-[10px] font-bold px-2 py-1 rounded">2026</div>
+                </a>
+
+                 <!-- Minutes -->
+                 <a href="https://docs.google.com/document/d/1LImLHyk2WVieWq6FyShTeLyX7Bb-VkF01RThcwmchls/edit?tab=t.0" target="_blank" class="glass-card rounded-xl p-4 flex items-center gap-4">
+                    <div class="bg-indigo-500/10 p-3 rounded-lg text-indigo-400">
+                        <i data-lucide="file-text" class="w-6 h-6"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-medium">Minutes</h3>
+                        <p class="text-xs text-white/50">Meeting Records</p>
+                    </div>
+                    <div class="bg-indigo-500/20 text-indigo-300 text-[10px] font-bold px-2 py-1 rounded">2026</div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Dynamic Tools Section -->
+        <section class="fade-in-up stagger-3">
+            <h2 class="text-sm font-medium text-white/60 mb-3 px-2 flex items-center gap-2">
+                <i data-lucide="grid" class="w-4 h-4 text-white/90"></i> Tools & Resources
+            </h2>
+            <div id="tools-grid" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+
+         <!-- Folders & Drive -->
+         <section class="fade-in-up stagger-4 pb-8">
+            <h2 class="text-sm font-medium text-white/60 mb-3 px-2 flex items-center gap-2">
+                <i data-lucide="folder" class="w-4 h-4 text-yellow-200"></i> Drive & Archive
+            </h2>
+            <div id="folders-grid" class="grid grid-cols-2 gap-3">
+                 <!-- Injected via JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Floating Search Bar (Collapsed by Default) -->
+    <div class="fixed bottom-6 left-0 right-0 flex justify-center z-50 pointer-events-none">
+        <div class="pointer-events-auto search-container glass-panel rounded-full flex items-center shadow-2xl relative">
+            
+            <!-- Icon (Always Visible, Acts as Trigger) -->
+            <div class="w-12 h-12 flex items-center justify-center flex-shrink-0 z-10">
+                <i data-lucide="search" class="w-5 h-5 text-white/80 search-icon"></i>
+            </div>
+            
+            <!-- Input (Hidden until hover/focus) -->
+            <input type="text" id="searchInput" placeholder="Search apps, reports, links..." class="search-input bg-transparent border-none outline-none text-white placeholder-white/50 text-base pr-10 pl-1 h-full absolute left-10 top-0" autocomplete="off">
+            
+            <!-- Clear Button -->
+            <div id="clearSearch" class="hidden cursor-pointer p-2 absolute right-2 z-20">
+                <i data-lucide="x" class="w-4 h-4 text-white/50 hover:text-white"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- No Results State -->
+    <div id="no-results" class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+        <div class="bg-white/10 p-6 rounded-full inline-block mb-4 backdrop-blur-sm">
+            <i data-lucide="ghost" class="w-12 h-12 text-white/30"></i>
+        </div>
+        <p class="text-white/50 font-medium">No links found</p>
+    </div>
+
+    <script>
+        // Data Store (Checklist removed, Auto-Email moved, MyShortcuts last)
+        const tools = [
+            { name: "GeBIZ Sheet", url: "https://docs.google.com/spreadsheets/d/1vFNxXi2tHWCtXe0SolDQxvREO8mylVZoF08upp1e68c/edit?gid=905350962#gid=905350962", icon: "table", color: "text-blue-300" },
+            { name: "Programme Survey", url: "https://docs.google.com/spreadsheets/d/1iwtPw3ZMFlbz9dOypJkOvYh5nF28nPum-yOprl59s8Q/edit?gid=0#gid=0", icon: "clipboard-list", color: "text-yellow-300" },
+            { name: "LinkShrink", url: "https://darylvivarch.github.io/vsuite/url-shortening-service.html", icon: "link", color: "text-pink-300" },
+            { name: "QRreate", url: "https://darylvivarch.github.io/vsuite/qr-code-generator.html", icon: "qr-code", color: "text-white" },
+            { name: "Webmail", url: "https://sh00046.vodien.com:2096/", icon: "at-sign", color: "text-orange-300" },
+            { name: "Email Blast", url: "https://docs.google.com/spreadsheets/d/1R9duSqscVMLW0fXmzdH6alVVxV77jPqL_UPgOJEpQ58/edit?gid=0#gid=0", icon: "send", color: "text-cyan-300" },
+            { name: "Auto-Email", url: "https://docs.google.com/spreadsheets/d/1uZ_XWizRCCQUxyEkuJcsTnMO0Ocek9DIaZ9Gi9-Ri6U/edit?gid=441196338#gid=441196338", icon: "repeat", color: "text-teal-300" },
+            { name: "Proposal Templates", url: "https://drive.google.com/drive/folders/1FUU9h4AWny2kINULUYhHVYMwAaSehZAg", icon: "file-text", color: "text-indigo-300" },
+            { name: "iEdu Portal", url: "https://celebratelife.ieducentre.com/m_home/Account/Login?redirect=%2fcommon%2fv_user.aspx", icon: "graduation-cap", color: "text-red-300" },
+            { name: "GeBIZ Portal", url: "https://www.gebiz.gov.sg/ptn/opportunity/BOListing.xhtml", icon: "globe", color: "text-blue-200" },
+            { name: "NAC LOE", url: "https://drive.google.com/drive/folders/1R_WLRZu9pyfmJaBmM8bJUOWkwU3OVbrk", icon: "briefcase", color: "text-purple-300" },
+            { name: "MyShortcuts", url: "https://docs.google.com/document/d/1q1QoJg37-JwbyqE_YiAcfMrEqXJNFjMaQYBGKzeOvlg/edit?tab=t.u4y9rvsaiims", icon: "bookmark", color: "text-yellow-200" }
+        ];
+
+        const folders = [
+            { name: "Project Request Forms", url: "https://drive.google.com/drive/folders/1pCeMl1GhCCkcK7god7G-3RXk0sQYwvjE", icon: "folder-plus" },
+            { name: "Evaluation Forms", url: "https://drive.google.com/drive/folders/1TEeUeDDtdlH50lcSYM509gHpEpgr13Ck", icon: "folder-check" },
+            { name: "Evaluation Reports", url: "https://drive.google.com/drive/folders/1cgQMUJf1RWKYSmTuOKzD0A_5HzcYuh5o", icon: "bar-chart-2" },
+            { name: "2025 Leads Tracker", url: "https://docs.google.com/spreadsheets/d/12J3LXrLX7xvFUbi-FpNEa0l79bvcbd_jeoqxgv16EuE/edit?gid=748653555#gid=748653555", icon: "archive" },
+            { name: "Sarah's Folder", url: "https://drive.google.com/drive/folders/1B6XYp9MGdpBjCieCK2fRoz3DDOuYm_9K", icon: "folder" },
+            { name: "Krystle's Folder", url: "https://drive.google.com/drive/folders/1ETcUnB7yA66PVCuKOqjYL05f6pLDe4K0", icon: "folder" }
+        ];
+
+        // Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            renderTools();
+            renderFolders();
+            initClock();
+            
+            // Focus search on slash
+            document.addEventListener('keydown', (e) => {
+                if (e.key === '/' && document.activeElement !== document.getElementById('searchInput')) {
+                    e.preventDefault();
+                    // Manually trigger expand if needed by focusing
+                    document.getElementById('searchInput').focus();
+                }
+            });
+        });
+
+        // Clock Function
+        function initClock() {
+            const updateTime = () => {
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                document.getElementById('timeDisplay').innerText = `${hours}:${minutes}`;
+                
+                const options = { weekday: 'short', month: 'short', day: 'numeric' };
+                document.getElementById('dateDisplay').innerText = now.toLocaleDateString('en-US', options);
+
+                // Greeting logic
+                const hour = now.getHours();
+                let greeting = 'Good Evening';
+                if (hour < 12) greeting = 'Good Morning';
+                else if (hour < 18) greeting = 'Good Afternoon';
+                document.getElementById('greeting').innerText = greeting;
+            };
+            updateTime();
+            setInterval(updateTime, 1000);
+        }
+
+        // Render Functions
+        function renderTools() {
+            const grid = document.getElementById('tools-grid');
+            grid.innerHTML = tools.map(tool => `
+                <a href="${tool.url}" target="_blank" class="searchable-item glass-card rounded-xl p-3 flex flex-col items-center justify-center text-center gap-2 aspect-square md:aspect-auto md:h-28">
+                    <div class="${tool.color} opacity-90">
+                        <i data-lucide="${tool.icon}" class="w-6 h-6"></i>
+                    </div>
+                    <span class="text-xs font-medium leading-tight text-white/80 line-clamp-2">${tool.name}</span>
+                </a>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function renderFolders() {
+            const grid = document.getElementById('folders-grid');
+            grid.innerHTML = folders.map(folder => `
+                <a href="${folder.url}" target="_blank" class="searchable-item glass-card rounded-xl p-3 flex items-center gap-3">
+                    <div class="text-yellow-200/80">
+                        <i data-lucide="${folder.icon}" class="w-5 h-5"></i>
+                    </div>
+                    <span class="text-sm font-medium text-white/80 truncate">${folder.name}</span>
+                </a>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        // Search Logic
+        const searchInput = document.getElementById('searchInput');
+        const clearBtn = document.getElementById('clearSearch');
+        const noResults = document.getElementById('no-results');
+        const sections = document.querySelectorAll('section');
+
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            let totalVisible = 0;
+
+            if (term.length > 0) {
+                clearBtn.classList.remove('hidden');
+                
+                // Hide section titles during search
+                document.querySelectorAll('section h2').forEach(h => h.style.display = 'none');
+                
+                // Search across all links
+                const staticCards = document.querySelectorAll('main a'); 
+                
+                staticCards.forEach(card => {
+                    const text = card.innerText.toLowerCase();
+                    if (text.includes(term)) {
+                        card.style.display = 'flex'; 
+                        totalVisible++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+            } else {
+                clearSearch();
+                return;
+            }
+
+            // Show/Hide No Results
+            if (totalVisible === 0) {
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+            }
+        });
+
+        clearBtn.addEventListener('click', clearSearch);
+
+        function clearSearch() {
+            searchInput.value = '';
+            clearBtn.classList.add('hidden');
+            noResults.classList.add('hidden');
+            
+            // Show all titles
+            document.querySelectorAll('section h2').forEach(h => h.style.display = 'flex');
+            
+            // Show all cards
+            document.querySelectorAll('main a').forEach(card => card.style.display = 'flex');
+        }
+
+    </script>
+</body>
+</html>
