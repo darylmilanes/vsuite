@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>V-Suite 2026</title>
+    <!-- Favicon -->
+    <link rel="icon" href="https://fav.farm/💠" />
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -125,29 +127,29 @@
         .stagger-3 { animation-delay: 0.3s; }
         .stagger-4 { animation-delay: 0.4s; }
 
-        /* Search Bar Animation - Slower, Smoother, No Jump */
+        /* Search Bar Animation - Faster (0.5s) */
         .search-container {
             width: 48px; /* Collapsed width */
             height: 48px;
             overflow: hidden;
             /* Default transition for collapsing (smoother exit without spring) */
-            transition: width 0.8s cubic-bezier(0.25, 1, 0.5, 1), 
-                        background-color 0.6s ease,
-                        box-shadow 0.6s ease;
+            transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1), 
+                        background-color 0.4s ease,
+                        box-shadow 0.4s ease;
             cursor: pointer;
             margin: 0 auto; /* Ensures it stays centered */
         }
 
-        /* When Hovering/Active: Use the slow spring animation */
+        /* When Hovering/Active: Use the spring animation */
         .search-container:hover, 
         .search-container:focus-within {
             /* Use fixed rem units instead of % to prevent layout jumpiness during transition */
             width: 28rem; 
             
-            /* Slower duration (0.5s) with a controlled spring overshoot */
+            /* Faster duration (0.5s) with a controlled spring overshoot */
             transition: width 0.5s cubic-bezier(0.34, 1.3, 0.64, 1), 
-                        background-color 0.6s ease,
-                        box-shadow 0.6s ease;
+                        background-color 0.4s ease,
+                        box-shadow 0.4s ease;
             
             background: rgba(255, 255, 255, 0.15);
             box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
@@ -166,9 +168,9 @@
             width: 0;
             transform: translateX(30px); /* Start slightly to the right */
             
-            /* Delayed text entry to allow bar to expand first */
-            transition: opacity 0.8s ease 0.2s, 
-                        transform 1s cubic-bezier(0.34, 1.3, 0.64, 1) 0.2s;
+            /* Text entry synced with new speed */
+            transition: opacity 0.4s ease 0.1s, 
+                        transform 0.5s cubic-bezier(0.34, 1.3, 0.64, 1) 0.1s;
             pointer-events: none;
         }
 
@@ -182,7 +184,7 @@
         
         .search-icon {
              /* Icon animation matches the bar speed */
-             transition: transform 1s cubic-bezier(0.34, 1.3, 0.64, 1), color 0.5s ease;
+             transition: transform 0.5s cubic-bezier(0.34, 1.3, 0.64, 1), color 0.3s ease;
         }
         
         /* Spin/Scale icon on open */
@@ -229,8 +231,8 @@
                 <h2 class="text-sm font-medium text-white/60 mb-3 px-2 flex items-center gap-2">
                     <i data-lucide="zap" class="w-4 h-4 text-amber-300"></i> Essentials
                 </h2>
-                <!-- Changed grid to support 5 items nicely -->
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+                <!-- Adjusted grid to lg:grid-cols-3 to support 6 items nicely (3x2) -->
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3">
                     
                     <!-- WhatsApp -->
                     <a href="https://web.whatsapp.com/" target="_blank" class="glass-card rounded-2xl p-4 flex flex-col justify-between h-32 relative group">
@@ -284,6 +286,17 @@
                         <div>
                             <span class="text-lg font-semibold block leading-tight">Checklist</span>
                             <span class="text-xs text-white/50">Tasks</span>
+                        </div>
+                    </a>
+
+                    <!-- Zoom (Added) -->
+                    <a href="https://us06web.zoom.us/j/82924209678?pwd=DDtBYjOS4hHi2r42oCSfTdba7wVp1g.1" target="_blank" class="glass-card rounded-2xl p-4 flex flex-col justify-between h-32">
+                        <div class="bg-blue-600/20 w-10 h-10 rounded-full flex items-center justify-center text-blue-400 mb-2">
+                            <i data-lucide="video" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <span class="text-lg font-semibold block leading-tight">Zoom</span>
+                            <span class="text-xs text-white/50">Meeting</span>
                         </div>
                     </a>
                 </div>
@@ -400,13 +413,15 @@
     </div>
 
     <script>
-        // Data Store - Added Zone Search
+        // Data Store - Added Zone Search, Kanban Mini, Quoter
         const tools = [
+            { name: "Programme Survey", url: "https://docs.google.com/spreadsheets/d/1iwtPw3ZMFlbz9dOypJkOvYh5nF28nPum-yOprl59s8Q/edit?gid=0#gid=0", icon: "clipboard-list", color: "text-yellow-300" },
             { name: "GeBIZ Sheet", url: "https://docs.google.com/spreadsheets/d/1vFNxXi2tHWCtXe0SolDQxvREO8mylVZoF08upp1e68c/edit?gid=905350962#gid=905350962", icon: "table", color: "text-blue-300" },
             { name: "Zone Search", url: "https://darylmilanes.com/zone-search", icon: "scan-search", color: "text-emerald-300" },
-            { name: "Programme Survey", url: "https://docs.google.com/spreadsheets/d/1iwtPw3ZMFlbz9dOypJkOvYh5nF28nPum-yOprl59s8Q/edit?gid=0#gid=0", icon: "clipboard-list", color: "text-yellow-300" },
+            { name: "Kanban Mini", url: "https://darylmilanes.com/mini-kanban/", icon: "kanban", color: "text-rose-300" },
             { name: "LinkShrink", url: "https://darylvivarch.github.io/vsuite/url-shortening-service.html", icon: "link", color: "text-pink-300" },
             { name: "QRreate", url: "https://darylvivarch.github.io/vsuite/qr-code-generator.html", icon: "qr-code", color: "text-white" },
+            { name: "Quoter", url: "https://darylvivarch.github.io/vsuite/mobile-quoter.html", icon: "file-minus-2", color: "text-lime-300" },
             { name: "Webmail", url: "https://sh00046.vodien.com:2096/", icon: "at-sign", color: "text-orange-300" },
             { name: "Email Blast", url: "https://docs.google.com/spreadsheets/d/1R9duSqscVMLW0fXmzdH6alVVxV77jPqL_UPgOJEpQ58/edit?gid=0#gid=0", icon: "send", color: "text-cyan-300" },
             { name: "Auto-Email", url: "https://docs.google.com/spreadsheets/d/1uZ_XWizRCCQUxyEkuJcsTnMO0Ocek9DIaZ9Gi9-Ri6U/edit?gid=441196338#gid=441196338", icon: "repeat", color: "text-teal-300" },
